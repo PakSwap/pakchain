@@ -1,18 +1,21 @@
 import { Reader, Writer } from 'protobufjs/minimal';
+import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { Post } from '../blog/post';
 export declare const protobufPackage = "ahmetson.chain.blog";
 /** this line is used by starport scaffolding # 3 */
 export interface QueryPostsRequest {
+    pagination: PageRequest | undefined;
 }
 export interface QueryPostsResponse {
-    title: string;
-    response: string;
+    Post: Post[];
+    pagination: PageResponse | undefined;
 }
 export declare const QueryPostsRequest: {
-    encode(_: QueryPostsRequest, writer?: Writer): Writer;
+    encode(message: QueryPostsRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryPostsRequest;
-    fromJSON(_: any): QueryPostsRequest;
-    toJSON(_: QueryPostsRequest): unknown;
-    fromPartial(_: DeepPartial<QueryPostsRequest>): QueryPostsRequest;
+    fromJSON(object: any): QueryPostsRequest;
+    toJSON(message: QueryPostsRequest): unknown;
+    fromPartial(object: DeepPartial<QueryPostsRequest>): QueryPostsRequest;
 };
 export declare const QueryPostsResponse: {
     encode(message: QueryPostsResponse, writer?: Writer): Writer;

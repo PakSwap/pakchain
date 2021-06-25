@@ -1,9 +1,14 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal';
+import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { Post } from '../blog/post';
 export const protobufPackage = 'ahmetson.chain.blog';
 const baseQueryPostsRequest = {};
 export const QueryPostsRequest = {
-    encode(_, writer = Writer.create()) {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
         return writer;
     },
     decode(input, length) {
@@ -13,6 +18,9 @@ export const QueryPostsRequest = {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -20,27 +28,40 @@ export const QueryPostsRequest = {
         }
         return message;
     },
-    fromJSON(_) {
+    fromJSON(object) {
         const message = { ...baseQueryPostsRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
         return message;
     },
-    toJSON(_) {
+    toJSON(message) {
         const obj = {};
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
         return obj;
     },
-    fromPartial(_) {
+    fromPartial(object) {
         const message = { ...baseQueryPostsRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
         return message;
     }
 };
-const baseQueryPostsResponse = { title: '', response: '' };
+const baseQueryPostsResponse = {};
 export const QueryPostsResponse = {
     encode(message, writer = Writer.create()) {
-        if (message.title !== '') {
-            writer.uint32(10).string(message.title);
+        for (const v of message.Post) {
+            Post.encode(v, writer.uint32(10).fork()).ldelim();
         }
-        if (message.response !== '') {
-            writer.uint32(18).string(message.response);
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
         }
         return writer;
     },
@@ -48,14 +69,15 @@ export const QueryPostsResponse = {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = { ...baseQueryPostsResponse };
+        message.Post = [];
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
-                    message.title = reader.string();
+                    message.Post.push(Post.decode(reader, reader.uint32()));
                     break;
                 case 2:
-                    message.response = reader.string();
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -66,39 +88,44 @@ export const QueryPostsResponse = {
     },
     fromJSON(object) {
         const message = { ...baseQueryPostsResponse };
-        if (object.title !== undefined && object.title !== null) {
-            message.title = String(object.title);
+        message.Post = [];
+        if (object.Post !== undefined && object.Post !== null) {
+            for (const e of object.Post) {
+                message.Post.push(Post.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
         }
         else {
-            message.title = '';
-        }
-        if (object.response !== undefined && object.response !== null) {
-            message.response = String(object.response);
-        }
-        else {
-            message.response = '';
+            message.pagination = undefined;
         }
         return message;
     },
     toJSON(message) {
         const obj = {};
-        message.title !== undefined && (obj.title = message.title);
-        message.response !== undefined && (obj.response = message.response);
+        if (message.Post) {
+            obj.Post = message.Post.map((e) => (e ? Post.toJSON(e) : undefined));
+        }
+        else {
+            obj.Post = [];
+        }
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
         return obj;
     },
     fromPartial(object) {
         const message = { ...baseQueryPostsResponse };
-        if (object.title !== undefined && object.title !== null) {
-            message.title = object.title;
+        message.Post = [];
+        if (object.Post !== undefined && object.Post !== null) {
+            for (const e of object.Post) {
+                message.Post.push(Post.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
         }
         else {
-            message.title = '';
-        }
-        if (object.response !== undefined && object.response !== null) {
-            message.response = object.response;
-        }
-        else {
-            message.response = '';
+            message.pagination = undefined;
         }
         return message;
     }
