@@ -85,6 +85,9 @@ import (
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
+	"github.com/ahmetson/chain/x/blog"
+	blogkeeper "github.com/ahmetson/chain/x/blog/keeper"
+	blogtypes "github.com/ahmetson/chain/x/blog/types"
 	"github.com/ahmetson/chain/x/chain"
 	chainkeeper "github.com/ahmetson/chain/x/chain/keeper"
 	chaintypes "github.com/ahmetson/chain/x/chain/types"
@@ -134,6 +137,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
+		blog.AppModuleBasic{},
 		chain.AppModuleBasic{},
 	)
 
@@ -202,6 +206,8 @@ type App struct {
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
+	BlogKeeper blogkeeper.Keeper
+
 	ChainKeeper chainkeeper.Keeper
 
 	// the module manager
@@ -232,6 +238,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
+		blogtypes.StoreKey,
 		chaintypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -325,6 +332,13 @@ func New(
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
+	app.BlogKeeper = *blogkeeper.NewKeeper(
+		appCodec,
+		keys[blogtypes.StoreKey],
+		keys[blogtypes.MemStoreKey],
+	)
+	blogModule := blog.NewAppModule(appCodec, app.BlogKeeper)
+
 	app.ChainKeeper = *chainkeeper.NewKeeper(
 		appCodec,
 		keys[chaintypes.StoreKey],
@@ -373,6 +387,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
+		blogModule,
 		chainModule,
 	)
 
@@ -407,6 +422,7 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
+		blogtypes.ModuleName,
 		chaintypes.ModuleName,
 	)
 
@@ -595,6 +611,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(blogtypes.ModuleName)
 	paramsKeeper.Subspace(chaintypes.ModuleName)
 
 	return paramsKeeper

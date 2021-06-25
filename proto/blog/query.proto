@@ -1,0 +1,28 @@
+syntax = "proto3";
+package ahmetson.chain.blog;
+
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/ahmetson/chain/x/blog/types";
+
+// Query defines the gRPC querier service.
+service Query {
+    // this line is used by starport scaffolding # 2
+
+	// Queries a list of posts items.
+	rpc Posts(QueryPostsRequest) returns (QueryPostsResponse) {
+		option (google.api.http).get = "/ahmetson/chain/blog/posts";
+	}
+}
+
+// this line is used by starport scaffolding # 3
+message QueryPostsRequest {
+}
+
+message QueryPostsResponse {
+  string title = 1;
+  string response = 2;
+}
+
