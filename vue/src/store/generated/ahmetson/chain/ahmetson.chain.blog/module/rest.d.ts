@@ -2,6 +2,10 @@ export interface BlogMsgCreatePostResponse {
     /** @format uint64 */
     id?: string;
 }
+export interface BlogMsgEditPostResponse {
+    /** @format uint64 */
+    id?: string;
+}
 export interface BlogPost {
     creator?: string;
     /** @format uint64 */

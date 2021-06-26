@@ -33,6 +33,28 @@ func (k Keeper) GetPostCount(ctx sdk.Context) uint64 {
 	return count
 }
 
+func (k Keeper) GetPost(ctx sdk.Context, id uint64) types.Post {
+	// prefix
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.PostKey))
+
+	// post key in database
+	byteKey := make([]byte, 8)
+	binary.BigEndian.PutUint64(byteKey, id)
+
+	var postBinary = store.Get(byteKey)
+	if postBinary == nil {
+		panic("cannot find the post by given d")
+	}
+
+	var post types.Post
+	if err := k.cdc.UnmarshalBinaryBare(postBinary, &post); err != nil {
+		panic("cannot decode post data")
+	}
+
+	return post
+}
+
+
 func (k Keeper) SetPostCount(ctx sdk.Context, count uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.PostCountKey))
 
@@ -61,4 +83,18 @@ func (k Keeper) AppendPost(ctx sdk.Context, post types.Post) uint64 {
 	k.SetPostCount(ctx, count+1)
 
 	return count
+}
+
+func (k Keeper) ChangePost(ctx sdk.Context, post types.Post) uint64 {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.PostKey))
+
+	byteKey := make([]byte, 8)
+
+	binary.BigEndian.PutUint64(byteKey, post.Id)
+
+	editValue := k.cdc.MustMarshalBinaryBare(&post)
+
+	store.Set(byteKey, editValue)
+
+	return post.Id
 }

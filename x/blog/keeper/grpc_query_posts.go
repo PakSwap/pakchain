@@ -5,8 +5,8 @@ import (
 
 	"github.com/ahmetson/chain/x/blog/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
- 	sdk "github.com/cosmos/cosmos-sdk/types"
-	 "github.com/cosmos/cosmos-sdk/types/query"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -18,7 +18,7 @@ func (k Keeper) Posts(goCtx context.Context, req *types.QueryPostsRequest) (*typ
 
 	// store a list of posts
 	var posts []*types.Post
-	
+
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	store := ctx.KVStore(k.storeKey)

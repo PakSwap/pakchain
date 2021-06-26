@@ -1,6 +1,15 @@
 import { Reader, Writer } from 'protobufjs/minimal';
 export declare const protobufPackage = "ahmetson.chain.blog";
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgEditPost {
+    creator: string;
+    id: number;
+    title: string;
+    response: string;
+}
+export interface MsgEditPostResponse {
+    id: number;
+}
 export interface MsgCreatePost {
     creator: string;
     title: string;
@@ -9,6 +18,20 @@ export interface MsgCreatePost {
 export interface MsgCreatePostResponse {
     id: number;
 }
+export declare const MsgEditPost: {
+    encode(message: MsgEditPost, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgEditPost;
+    fromJSON(object: any): MsgEditPost;
+    toJSON(message: MsgEditPost): unknown;
+    fromPartial(object: DeepPartial<MsgEditPost>): MsgEditPost;
+};
+export declare const MsgEditPostResponse: {
+    encode(message: MsgEditPostResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgEditPostResponse;
+    fromJSON(object: any): MsgEditPostResponse;
+    toJSON(message: MsgEditPostResponse): unknown;
+    fromPartial(object: DeepPartial<MsgEditPostResponse>): MsgEditPostResponse;
+};
 export declare const MsgCreatePost: {
     encode(message: MsgCreatePost, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreatePost;
@@ -26,11 +49,13 @@ export declare const MsgCreatePostResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
+    EditPost(request: MsgEditPost): Promise<MsgEditPostResponse>;
     CreatePost(request: MsgCreatePost): Promise<MsgCreatePostResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    EditPost(request: MsgEditPost): Promise<MsgEditPostResponse>;
     CreatePost(request: MsgCreatePost): Promise<MsgCreatePostResponse>;
 }
 interface Rpc {

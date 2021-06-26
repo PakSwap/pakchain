@@ -19401,6 +19401,12 @@ definitions:
       id:
         type: string
         format: uint64
+  ahmetson.chain.blog.MsgEditPostResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
   ahmetson.chain.blog.Post:
     type: object
     properties:

@@ -7,11 +7,24 @@ option go_package = "github.com/ahmetson/chain/x/blog/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
-  rpc CreatePost(MsgCreatePost) returns (MsgCreatePostResponse);
+	// this line is used by starport scaffolding # proto/tx/rpc
+	rpc EditPost(MsgEditPost) returns (MsgEditPostResponse);
+  	rpc CreatePost(MsgCreatePost) returns (MsgCreatePostResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgEditPost {
+  string creator = 1;
+  uint64 id = 2;
+  string title = 3;
+  string response = 4;
+}
+
+message MsgEditPostResponse {
+  uint64 id = 1;
+}
+
+
 message MsgCreatePost {
   string creator = 1;
   string title = 2;
