@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 export const protobufPackage = 'ahmetson.chain.ibcblog';
 const baseIbcblogPacketData = {};
 export const IbcblogPacketData = {
@@ -103,7 +104,7 @@ export const NoData = {
         return message;
     }
 };
-const baseIbcPostPacketData = { title: '', content: '' };
+const baseIbcPostPacketData = { title: '', content: '', creator: '' };
 export const IbcPostPacketData = {
     encode(message, writer = Writer.create()) {
         if (message.title !== '') {
@@ -111,6 +112,9 @@ export const IbcPostPacketData = {
         }
         if (message.content !== '') {
             writer.uint32(18).string(message.content);
+        }
+        if (message.creator !== '') {
+            writer.uint32(26).string(message.creator);
         }
         return writer;
     },
@@ -126,6 +130,9 @@ export const IbcPostPacketData = {
                     break;
                 case 2:
                     message.content = reader.string();
+                    break;
+                case 3:
+                    message.creator = reader.string();
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -148,12 +155,19 @@ export const IbcPostPacketData = {
         else {
             message.content = '';
         }
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = String(object.creator);
+        }
+        else {
+            message.creator = '';
+        }
         return message;
     },
     toJSON(message) {
         const obj = {};
         message.title !== undefined && (obj.title = message.title);
         message.content !== undefined && (obj.content = message.content);
+        message.creator !== undefined && (obj.creator = message.creator);
         return obj;
     },
     fromPartial(object) {
@@ -170,14 +184,20 @@ export const IbcPostPacketData = {
         else {
             message.content = '';
         }
+        if (object.creator !== undefined && object.creator !== null) {
+            message.creator = object.creator;
+        }
+        else {
+            message.creator = '';
+        }
         return message;
     }
 };
-const baseIbcPostPacketAck = { postid: '' };
+const baseIbcPostPacketAck = { postid: 0 };
 export const IbcPostPacketAck = {
     encode(message, writer = Writer.create()) {
-        if (message.postid !== '') {
-            writer.uint32(10).string(message.postid);
+        if (message.postid !== 0) {
+            writer.uint32(8).uint64(message.postid);
         }
         return writer;
     },
@@ -189,7 +209,7 @@ export const IbcPostPacketAck = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
-                    message.postid = reader.string();
+                    message.postid = longToNumber(reader.uint64());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -201,10 +221,10 @@ export const IbcPostPacketAck = {
     fromJSON(object) {
         const message = { ...baseIbcPostPacketAck };
         if (object.postid !== undefined && object.postid !== null) {
-            message.postid = String(object.postid);
+            message.postid = Number(object.postid);
         }
         else {
-            message.postid = '';
+            message.postid = 0;
         }
         return message;
     },
@@ -219,8 +239,29 @@ export const IbcPostPacketAck = {
             message.postid = object.postid;
         }
         else {
-            message.postid = '';
+            message.postid = 0;
         }
         return message;
     }
 };
+var globalThis = (() => {
+    if (typeof globalThis !== 'undefined')
+        return globalThis;
+    if (typeof self !== 'undefined')
+        return self;
+    if (typeof window !== 'undefined')
+        return window;
+    if (typeof global !== 'undefined')
+        return global;
+    throw 'Unable to locate global object';
+})();
+function longToNumber(long) {
+    if (long.gt(Number.MAX_SAFE_INTEGER)) {
+        throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    }
+    return long.toNumber();
+}
+if (util.Long !== Long) {
+    util.Long = Long;
+    configure();
+}

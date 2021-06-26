@@ -17,11 +17,12 @@ message NoData {
 // this line is used by starport scaffolding # ibc/packet/proto/message
 // IbcPostPacketData defines a struct for the packet payload
 message IbcPostPacketData {
-	  string title = 1;
+  string title = 1;
   string content = 2;
+  string creator = 3; // Adding manually, to track who sent the post data.
 }
 
 // IbcPostPacketAck defines a struct for the packet acknowledgment
 message IbcPostPacketAck {
-	  string postid = 1;
+  uint64 postid = 1;
 }

@@ -14,10 +14,12 @@ export interface NoData {
 export interface IbcPostPacketData {
     title: string;
     content: string;
+    /** Adding manually, to track who sent the post data. */
+    creator: string;
 }
 /** IbcPostPacketAck defines a struct for the packet acknowledgment */
 export interface IbcPostPacketAck {
-    postid: string;
+    postid: number;
 }
 export declare const IbcblogPacketData: {
     encode(message: IbcblogPacketData, writer?: Writer): Writer;

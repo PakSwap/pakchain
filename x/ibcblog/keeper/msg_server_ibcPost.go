@@ -18,6 +18,7 @@ func (k msgServer) SendIbcPost(goCtx context.Context, msg *types.MsgSendIbcPost)
 
 	packet.Title = msg.Title
 	packet.Content = msg.Content
+	packet.Creator = msg.Sender
 
 	// Transmit the packet
 	err := k.TransmitIbcPostPacket(
@@ -34,3 +35,4 @@ func (k msgServer) SendIbcPost(goCtx context.Context, msg *types.MsgSendIbcPost)
 
 	return &types.MsgSendIbcPostResponse{}, nil
 }
+

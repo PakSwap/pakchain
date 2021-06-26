@@ -9,6 +9,7 @@ import (
 	clienttypes "github.com/cosmos/cosmos-sdk/x/ibc/core/02-client/types"
 	channeltypes "github.com/cosmos/cosmos-sdk/x/ibc/core/04-channel/types"
 	host "github.com/cosmos/cosmos-sdk/x/ibc/core/24-host"
+	"strconv"
 )
 
 // TransmitIbcPostPacket transmits the packet over IBC with the specified source port and source channel
@@ -73,7 +74,18 @@ func (k Keeper) OnRecvIbcPostPacket(ctx sdk.Context, packet channeltypes.Packet,
 		return packetAck, err
 	}
 
-	// TODO: packet reception logic
+	var post = types.Post{
+		Creator: packet.SourcePort+"-"+packet.SourceChannel+"-"+data.Creator,
+		Title:   data.Title,
+		Content: data.Content,
+	}
+
+	id := k.AppendPost(
+		ctx,
+		post,
+	)
+
+	packetAck.Postid = id
 
 	return packetAck, nil
 }
@@ -98,6 +110,17 @@ func (k Keeper) OnAcknowledgementIbcPostPacket(ctx sdk.Context, packet channelty
 		}
 
 		// TODO: successful acknowledgement logic
+		var sentPost = types.SentPost{
+			Creator: data.Creator,
+			Postid:  strconv.FormatUint(packetAck.Postid, 10),
+			Title:   data.Title,
+			Chain:   packet.DestinationPort+"-"+packet.DestinationChannel,
+		}
+
+		k.AppendSentPost(
+			ctx,
+			sentPost,
+		)
 
 		return nil
 	default:
@@ -110,6 +133,16 @@ func (k Keeper) OnAcknowledgementIbcPostPacket(ctx sdk.Context, packet channelty
 func (k Keeper) OnTimeoutIbcPostPacket(ctx sdk.Context, packet channeltypes.Packet, data types.IbcPostPacketData) error {
 
 	// TODO: packet timeout logic
+	var timedoutPost = types.TimedoutPosts{
+		Creator: data.Creator,
+		Title:   data.Title,
+		Chain:   packet.DestinationPort+"-"+packet.DestinationChannel,
+	}
+
+	k.AppendTimedoutPosts(
+		ctx,
+		timedoutPost,
+	)
 
 	return nil
 }
