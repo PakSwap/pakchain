@@ -1,0 +1,14 @@
+syntax = "proto3";
+package ahmetson.chain.ibcblog;
+
+option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
+
+import "gogoproto/gogo.proto";
+
+message SentPost {
+  string creator = 1;
+  uint64 id = 2;
+  string postid = 3; 
+  string title = 4; 
+  string chain = 5; 
+}

@@ -2,6 +2,7 @@ syntax = "proto3";
 package ahmetson.chain.ibcblog;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "ibcblog/sentPost.proto";
 import "ibcblog/post.proto";
 
 option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
@@ -9,12 +10,43 @@ option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateSentPost(MsgCreateSentPost) returns (MsgCreateSentPostResponse);
+  rpc UpdateSentPost(MsgUpdateSentPost) returns (MsgUpdateSentPostResponse);
+  rpc DeleteSentPost(MsgDeleteSentPost) returns (MsgDeleteSentPostResponse);
   rpc CreatePost(MsgCreatePost) returns (MsgCreatePostResponse);
   rpc UpdatePost(MsgUpdatePost) returns (MsgUpdatePostResponse);
   rpc DeletePost(MsgDeletePost) returns (MsgDeletePostResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreateSentPost {
+  string creator = 1;
+  string postid = 2;
+  string title = 3;
+  string chain = 4;
+}
+
+message MsgCreateSentPostResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateSentPost {
+  string creator = 1;
+  uint64 id = 2;
+  string postid = 3;
+  string title = 4;
+  string chain = 5;
+}
+
+message MsgUpdateSentPostResponse { }
+
+message MsgDeleteSentPost {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteSentPostResponse { }
+
 message MsgCreatePost {
   string creator = 1;
   string title = 2;

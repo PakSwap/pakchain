@@ -1,11 +1,18 @@
 /* eslint-disable */
 import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import { SentPost } from '../ibcblog/sentPost';
 import { Post } from '../ibcblog/post';
 export const protobufPackage = 'ahmetson.chain.ibcblog';
-const baseGenesisState = { postCount: 0, portId: '' };
+const baseGenesisState = { sentPostCount: 0, postCount: 0, portId: '' };
 export const GenesisState = {
     encode(message, writer = Writer.create()) {
+        for (const v of message.sentPostList) {
+            SentPost.encode(v, writer.uint32(34).fork()).ldelim();
+        }
+        if (message.sentPostCount !== 0) {
+            writer.uint32(40).uint64(message.sentPostCount);
+        }
         for (const v of message.postList) {
             Post.encode(v, writer.uint32(18).fork()).ldelim();
         }
@@ -21,10 +28,17 @@ export const GenesisState = {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
         const message = { ...baseGenesisState };
+        message.sentPostList = [];
         message.postList = [];
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
+                case 4:
+                    message.sentPostList.push(SentPost.decode(reader, reader.uint32()));
+                    break;
+                case 5:
+                    message.sentPostCount = longToNumber(reader.uint64());
+                    break;
                 case 2:
                     message.postList.push(Post.decode(reader, reader.uint32()));
                     break;
@@ -43,7 +57,19 @@ export const GenesisState = {
     },
     fromJSON(object) {
         const message = { ...baseGenesisState };
+        message.sentPostList = [];
         message.postList = [];
+        if (object.sentPostList !== undefined && object.sentPostList !== null) {
+            for (const e of object.sentPostList) {
+                message.sentPostList.push(SentPost.fromJSON(e));
+            }
+        }
+        if (object.sentPostCount !== undefined && object.sentPostCount !== null) {
+            message.sentPostCount = Number(object.sentPostCount);
+        }
+        else {
+            message.sentPostCount = 0;
+        }
         if (object.postList !== undefined && object.postList !== null) {
             for (const e of object.postList) {
                 message.postList.push(Post.fromJSON(e));
@@ -65,6 +91,13 @@ export const GenesisState = {
     },
     toJSON(message) {
         const obj = {};
+        if (message.sentPostList) {
+            obj.sentPostList = message.sentPostList.map((e) => (e ? SentPost.toJSON(e) : undefined));
+        }
+        else {
+            obj.sentPostList = [];
+        }
+        message.sentPostCount !== undefined && (obj.sentPostCount = message.sentPostCount);
         if (message.postList) {
             obj.postList = message.postList.map((e) => (e ? Post.toJSON(e) : undefined));
         }
@@ -77,7 +110,19 @@ export const GenesisState = {
     },
     fromPartial(object) {
         const message = { ...baseGenesisState };
+        message.sentPostList = [];
         message.postList = [];
+        if (object.sentPostList !== undefined && object.sentPostList !== null) {
+            for (const e of object.sentPostList) {
+                message.sentPostList.push(SentPost.fromPartial(e));
+            }
+        }
+        if (object.sentPostCount !== undefined && object.sentPostCount !== null) {
+            message.sentPostCount = object.sentPostCount;
+        }
+        else {
+            message.sentPostCount = 0;
+        }
         if (object.postList !== undefined && object.postList !== null) {
             for (const e of object.postList) {
                 message.postList.push(Post.fromPartial(e));

@@ -2,8 +2,14 @@ export interface IbcblogMsgCreatePostResponse {
     /** @format uint64 */
     id?: string;
 }
+export interface IbcblogMsgCreateSentPostResponse {
+    /** @format uint64 */
+    id?: string;
+}
 export declare type IbcblogMsgDeletePostResponse = object;
+export declare type IbcblogMsgDeleteSentPostResponse = object;
 export declare type IbcblogMsgUpdatePostResponse = object;
+export declare type IbcblogMsgUpdateSentPostResponse = object;
 export interface IbcblogPost {
     creator?: string;
     /** @format uint64 */
@@ -24,8 +30,32 @@ export interface IbcblogQueryAllPostResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
+export interface IbcblogQueryAllSentPostResponse {
+    SentPost?: IbcblogSentPost[];
+    /**
+     * PageResponse is to be embedded in gRPC response messages where the
+     * corresponding request message has used PageRequest.
+     *
+     *  message SomeResponse {
+     *          repeated Bar results = 1;
+     *          PageResponse page = 2;
+     *  }
+     */
+    pagination?: V1Beta1PageResponse;
+}
 export interface IbcblogQueryGetPostResponse {
     Post?: IbcblogPost;
+}
+export interface IbcblogQueryGetSentPostResponse {
+    SentPost?: IbcblogSentPost;
+}
+export interface IbcblogSentPost {
+    creator?: string;
+    /** @format uint64 */
+    id?: string;
+    postid?: string;
+    title?: string;
+    chain?: string;
 }
 export interface ProtobufAny {
     typeUrl?: string;
@@ -169,5 +199,28 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request GET:/ahmetson/chain/ibcblog/post/{id}
      */
     queryPost: (id: string, params?: RequestParams) => Promise<HttpResponse<IbcblogQueryGetPostResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QuerySentPostAll
+     * @summary Queries a list of sentPost items.
+     * @request GET:/ahmetson/chain/ibcblog/sentPost
+     */
+    querySentPostAll: (query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<IbcblogQueryAllSentPostResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QuerySentPost
+     * @summary Queries a sentPost by id.
+     * @request GET:/ahmetson/chain/ibcblog/sentPost/{id}
+     */
+    querySentPost: (id: string, params?: RequestParams) => Promise<HttpResponse<IbcblogQueryGetSentPostResponse, RpcStatus>>;
 }
 export {};

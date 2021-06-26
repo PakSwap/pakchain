@@ -1,6 +1,30 @@
 import { Reader, Writer } from 'protobufjs/minimal';
 export declare const protobufPackage = "ahmetson.chain.ibcblog";
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgCreateSentPost {
+    creator: string;
+    postid: string;
+    title: string;
+    chain: string;
+}
+export interface MsgCreateSentPostResponse {
+    id: number;
+}
+export interface MsgUpdateSentPost {
+    creator: string;
+    id: number;
+    postid: string;
+    title: string;
+    chain: string;
+}
+export interface MsgUpdateSentPostResponse {
+}
+export interface MsgDeleteSentPost {
+    creator: string;
+    id: number;
+}
+export interface MsgDeleteSentPostResponse {
+}
 export interface MsgCreatePost {
     creator: string;
     title: string;
@@ -23,6 +47,48 @@ export interface MsgDeletePost {
 }
 export interface MsgDeletePostResponse {
 }
+export declare const MsgCreateSentPost: {
+    encode(message: MsgCreateSentPost, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateSentPost;
+    fromJSON(object: any): MsgCreateSentPost;
+    toJSON(message: MsgCreateSentPost): unknown;
+    fromPartial(object: DeepPartial<MsgCreateSentPost>): MsgCreateSentPost;
+};
+export declare const MsgCreateSentPostResponse: {
+    encode(message: MsgCreateSentPostResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateSentPostResponse;
+    fromJSON(object: any): MsgCreateSentPostResponse;
+    toJSON(message: MsgCreateSentPostResponse): unknown;
+    fromPartial(object: DeepPartial<MsgCreateSentPostResponse>): MsgCreateSentPostResponse;
+};
+export declare const MsgUpdateSentPost: {
+    encode(message: MsgUpdateSentPost, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateSentPost;
+    fromJSON(object: any): MsgUpdateSentPost;
+    toJSON(message: MsgUpdateSentPost): unknown;
+    fromPartial(object: DeepPartial<MsgUpdateSentPost>): MsgUpdateSentPost;
+};
+export declare const MsgUpdateSentPostResponse: {
+    encode(_: MsgUpdateSentPostResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateSentPostResponse;
+    fromJSON(_: any): MsgUpdateSentPostResponse;
+    toJSON(_: MsgUpdateSentPostResponse): unknown;
+    fromPartial(_: DeepPartial<MsgUpdateSentPostResponse>): MsgUpdateSentPostResponse;
+};
+export declare const MsgDeleteSentPost: {
+    encode(message: MsgDeleteSentPost, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteSentPost;
+    fromJSON(object: any): MsgDeleteSentPost;
+    toJSON(message: MsgDeleteSentPost): unknown;
+    fromPartial(object: DeepPartial<MsgDeleteSentPost>): MsgDeleteSentPost;
+};
+export declare const MsgDeleteSentPostResponse: {
+    encode(_: MsgDeleteSentPostResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteSentPostResponse;
+    fromJSON(_: any): MsgDeleteSentPostResponse;
+    toJSON(_: MsgDeleteSentPostResponse): unknown;
+    fromPartial(_: DeepPartial<MsgDeleteSentPostResponse>): MsgDeleteSentPostResponse;
+};
 export declare const MsgCreatePost: {
     encode(message: MsgCreatePost, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreatePost;
@@ -68,6 +134,9 @@ export declare const MsgDeletePostResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
+    CreateSentPost(request: MsgCreateSentPost): Promise<MsgCreateSentPostResponse>;
+    UpdateSentPost(request: MsgUpdateSentPost): Promise<MsgUpdateSentPostResponse>;
+    DeleteSentPost(request: MsgDeleteSentPost): Promise<MsgDeleteSentPostResponse>;
     CreatePost(request: MsgCreatePost): Promise<MsgCreatePostResponse>;
     UpdatePost(request: MsgUpdatePost): Promise<MsgUpdatePostResponse>;
     DeletePost(request: MsgDeletePost): Promise<MsgDeletePostResponse>;
@@ -75,6 +144,9 @@ export interface Msg {
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    CreateSentPost(request: MsgCreateSentPost): Promise<MsgCreateSentPostResponse>;
+    UpdateSentPost(request: MsgUpdateSentPost): Promise<MsgUpdateSentPostResponse>;
+    DeleteSentPost(request: MsgDeleteSentPost): Promise<MsgDeleteSentPostResponse>;
     CreatePost(request: MsgCreatePost): Promise<MsgCreatePostResponse>;
     UpdatePost(request: MsgUpdatePost): Promise<MsgUpdatePostResponse>;
     DeletePost(request: MsgDeletePost): Promise<MsgDeletePostResponse>;

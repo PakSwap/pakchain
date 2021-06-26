@@ -1,9 +1,14 @@
 import { Writer, Reader } from 'protobufjs/minimal';
+import { SentPost } from '../ibcblog/sentPost';
 import { Post } from '../ibcblog/post';
 export declare const protobufPackage = "ahmetson.chain.ibcblog";
 /** GenesisState defines the ibcblog module's genesis state. */
 export interface GenesisState {
     /** this line is used by starport scaffolding # genesis/proto/state */
+    sentPostList: SentPost[];
+    /** this line is used by starport scaffolding # genesis/proto/stateField */
+    sentPostCount: number;
+    /** this line is used by starport scaffolding # genesis/proto/stateField */
     postList: Post[];
     /** this line is used by starport scaffolding # genesis/proto/stateField */
     postCount: number;
