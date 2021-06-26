@@ -19,13 +19,22 @@ export interface IbcblogMsgCreateSentPostResponse {
   id?: string;
 }
 
+export interface IbcblogMsgCreateTimedoutPostsResponse {
+  /** @format uint64 */
+  id?: string;
+}
+
 export type IbcblogMsgDeletePostResponse = object;
 
 export type IbcblogMsgDeleteSentPostResponse = object;
 
+export type IbcblogMsgDeleteTimedoutPostsResponse = object;
+
 export type IbcblogMsgUpdatePostResponse = object;
 
 export type IbcblogMsgUpdateSentPostResponse = object;
+
+export type IbcblogMsgUpdateTimedoutPostsResponse = object;
 
 export interface IbcblogPost {
   creator?: string;
@@ -66,6 +75,21 @@ export interface IbcblogQueryAllSentPostResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface IbcblogQueryAllTimedoutPostsResponse {
+  TimedoutPosts?: IbcblogTimedoutPosts[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface IbcblogQueryGetPostResponse {
   Post?: IbcblogPost;
 }
@@ -74,12 +98,25 @@ export interface IbcblogQueryGetSentPostResponse {
   SentPost?: IbcblogSentPost;
 }
 
+export interface IbcblogQueryGetTimedoutPostsResponse {
+  TimedoutPosts?: IbcblogTimedoutPosts;
+}
+
 export interface IbcblogSentPost {
   creator?: string;
 
   /** @format uint64 */
   id?: string;
   postid?: string;
+  title?: string;
+  chain?: string;
+}
+
+export interface IbcblogTimedoutPosts {
+  creator?: string;
+
+  /** @format uint64 */
+  id?: string;
   title?: string;
   chain?: string;
 }
@@ -427,6 +464,47 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   querySentPost = (id: string, params: RequestParams = {}) =>
     this.request<IbcblogQueryGetSentPostResponse, RpcStatus>({
       path: `/ahmetson/chain/ibcblog/sentPost/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTimedoutPostsAll
+   * @summary Queries a list of timedoutPosts items.
+   * @request GET:/ahmetson/chain/ibcblog/timedoutPosts
+   */
+  queryTimedoutPostsAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.countTotal"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<IbcblogQueryAllTimedoutPostsResponse, RpcStatus>({
+      path: `/ahmetson/chain/ibcblog/timedoutPosts`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryTimedoutPosts
+   * @summary Queries a timedoutPosts by id.
+   * @request GET:/ahmetson/chain/ibcblog/timedoutPosts/{id}
+   */
+  queryTimedoutPosts = (id: string, params: RequestParams = {}) =>
+    this.request<IbcblogQueryGetTimedoutPostsResponse, RpcStatus>({
+      path: `/ahmetson/chain/ibcblog/timedoutPosts/${id}`,
       method: "GET",
       format: "json",
       ...params,

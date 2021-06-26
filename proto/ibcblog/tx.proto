@@ -2,6 +2,7 @@ syntax = "proto3";
 package ahmetson.chain.ibcblog;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "ibcblog/timedoutPosts.proto";
 import "ibcblog/sentPost.proto";
 import "ibcblog/post.proto";
 
@@ -10,6 +11,9 @@ option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateTimedoutPosts(MsgCreateTimedoutPosts) returns (MsgCreateTimedoutPostsResponse);
+  rpc UpdateTimedoutPosts(MsgUpdateTimedoutPosts) returns (MsgUpdateTimedoutPostsResponse);
+  rpc DeleteTimedoutPosts(MsgDeleteTimedoutPosts) returns (MsgDeleteTimedoutPostsResponse);
   rpc CreateSentPost(MsgCreateSentPost) returns (MsgCreateSentPostResponse);
   rpc UpdateSentPost(MsgUpdateSentPost) returns (MsgUpdateSentPostResponse);
   rpc DeleteSentPost(MsgDeleteSentPost) returns (MsgDeleteSentPostResponse);
@@ -19,6 +23,32 @@ service Msg {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreateTimedoutPosts {
+  string creator = 1;
+  string title = 2;
+  string chain = 3;
+}
+
+message MsgCreateTimedoutPostsResponse {
+  uint64 id = 1;
+}
+
+message MsgUpdateTimedoutPosts {
+  string creator = 1;
+  uint64 id = 2;
+  string title = 3;
+  string chain = 4;
+}
+
+message MsgUpdateTimedoutPostsResponse { }
+
+message MsgDeleteTimedoutPosts {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteTimedoutPostsResponse { }
+
 message MsgCreateSentPost {
   string creator = 1;
   string postid = 2;

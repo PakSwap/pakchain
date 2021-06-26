@@ -194,5 +194,34 @@ export class Api extends HttpClient {
             format: "json",
             ...params,
         });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryTimedoutPostsAll
+         * @summary Queries a list of timedoutPosts items.
+         * @request GET:/ahmetson/chain/ibcblog/timedoutPosts
+         */
+        this.queryTimedoutPostsAll = (query, params = {}) => this.request({
+            path: `/ahmetson/chain/ibcblog/timedoutPosts`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryTimedoutPosts
+         * @summary Queries a timedoutPosts by id.
+         * @request GET:/ahmetson/chain/ibcblog/timedoutPosts/{id}
+         */
+        this.queryTimedoutPosts = (id, params = {}) => this.request({
+            path: `/ahmetson/chain/ibcblog/timedoutPosts/${id}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
     }
 }

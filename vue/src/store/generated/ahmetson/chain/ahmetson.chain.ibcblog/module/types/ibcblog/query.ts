@@ -1,13 +1,31 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal'
 import * as Long from 'long'
-import { SentPost } from '../ibcblog/sentPost'
+import { TimedoutPosts } from '../ibcblog/timedoutPosts'
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination'
+import { SentPost } from '../ibcblog/sentPost'
 import { Post } from '../ibcblog/post'
 
 export const protobufPackage = 'ahmetson.chain.ibcblog'
 
 /** this line is used by starport scaffolding # 3 */
+export interface QueryGetTimedoutPostsRequest {
+  id: number
+}
+
+export interface QueryGetTimedoutPostsResponse {
+  TimedoutPosts: TimedoutPosts | undefined
+}
+
+export interface QueryAllTimedoutPostsRequest {
+  pagination: PageRequest | undefined
+}
+
+export interface QueryAllTimedoutPostsResponse {
+  TimedoutPosts: TimedoutPosts[]
+  pagination: PageResponse | undefined
+}
+
 export interface QueryGetSentPostRequest {
   id: number
 }
@@ -40,6 +58,250 @@ export interface QueryAllPostRequest {
 export interface QueryAllPostResponse {
   Post: Post[]
   pagination: PageResponse | undefined
+}
+
+const baseQueryGetTimedoutPostsRequest: object = { id: 0 }
+
+export const QueryGetTimedoutPostsRequest = {
+  encode(message: QueryGetTimedoutPostsRequest, writer: Writer = Writer.create()): Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetTimedoutPostsRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryGetTimedoutPostsRequest } as QueryGetTimedoutPostsRequest
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.uint64() as Long)
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryGetTimedoutPostsRequest {
+    const message = { ...baseQueryGetTimedoutPostsRequest } as QueryGetTimedoutPostsRequest
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id)
+    } else {
+      message.id = 0
+    }
+    return message
+  },
+
+  toJSON(message: QueryGetTimedoutPostsRequest): unknown {
+    const obj: any = {}
+    message.id !== undefined && (obj.id = message.id)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryGetTimedoutPostsRequest>): QueryGetTimedoutPostsRequest {
+    const message = { ...baseQueryGetTimedoutPostsRequest } as QueryGetTimedoutPostsRequest
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id
+    } else {
+      message.id = 0
+    }
+    return message
+  }
+}
+
+const baseQueryGetTimedoutPostsResponse: object = {}
+
+export const QueryGetTimedoutPostsResponse = {
+  encode(message: QueryGetTimedoutPostsResponse, writer: Writer = Writer.create()): Writer {
+    if (message.TimedoutPosts !== undefined) {
+      TimedoutPosts.encode(message.TimedoutPosts, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetTimedoutPostsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryGetTimedoutPostsResponse } as QueryGetTimedoutPostsResponse
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.TimedoutPosts = TimedoutPosts.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryGetTimedoutPostsResponse {
+    const message = { ...baseQueryGetTimedoutPostsResponse } as QueryGetTimedoutPostsResponse
+    if (object.TimedoutPosts !== undefined && object.TimedoutPosts !== null) {
+      message.TimedoutPosts = TimedoutPosts.fromJSON(object.TimedoutPosts)
+    } else {
+      message.TimedoutPosts = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryGetTimedoutPostsResponse): unknown {
+    const obj: any = {}
+    message.TimedoutPosts !== undefined && (obj.TimedoutPosts = message.TimedoutPosts ? TimedoutPosts.toJSON(message.TimedoutPosts) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryGetTimedoutPostsResponse>): QueryGetTimedoutPostsResponse {
+    const message = { ...baseQueryGetTimedoutPostsResponse } as QueryGetTimedoutPostsResponse
+    if (object.TimedoutPosts !== undefined && object.TimedoutPosts !== null) {
+      message.TimedoutPosts = TimedoutPosts.fromPartial(object.TimedoutPosts)
+    } else {
+      message.TimedoutPosts = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryAllTimedoutPostsRequest: object = {}
+
+export const QueryAllTimedoutPostsRequest = {
+  encode(message: QueryAllTimedoutPostsRequest, writer: Writer = Writer.create()): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllTimedoutPostsRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryAllTimedoutPostsRequest } as QueryAllTimedoutPostsRequest
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryAllTimedoutPostsRequest {
+    const message = { ...baseQueryAllTimedoutPostsRequest } as QueryAllTimedoutPostsRequest
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryAllTimedoutPostsRequest): unknown {
+    const obj: any = {}
+    message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryAllTimedoutPostsRequest>): QueryAllTimedoutPostsRequest {
+    const message = { ...baseQueryAllTimedoutPostsRequest } as QueryAllTimedoutPostsRequest
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  }
+}
+
+const baseQueryAllTimedoutPostsResponse: object = {}
+
+export const QueryAllTimedoutPostsResponse = {
+  encode(message: QueryAllTimedoutPostsResponse, writer: Writer = Writer.create()): Writer {
+    for (const v of message.TimedoutPosts) {
+      TimedoutPosts.encode(v!, writer.uint32(10).fork()).ldelim()
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim()
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllTimedoutPostsResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseQueryAllTimedoutPostsResponse } as QueryAllTimedoutPostsResponse
+    message.TimedoutPosts = []
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.TimedoutPosts.push(TimedoutPosts.decode(reader, reader.uint32()))
+          break
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32())
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): QueryAllTimedoutPostsResponse {
+    const message = { ...baseQueryAllTimedoutPostsResponse } as QueryAllTimedoutPostsResponse
+    message.TimedoutPosts = []
+    if (object.TimedoutPosts !== undefined && object.TimedoutPosts !== null) {
+      for (const e of object.TimedoutPosts) {
+        message.TimedoutPosts.push(TimedoutPosts.fromJSON(e))
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  },
+
+  toJSON(message: QueryAllTimedoutPostsResponse): unknown {
+    const obj: any = {}
+    if (message.TimedoutPosts) {
+      obj.TimedoutPosts = message.TimedoutPosts.map((e) => (e ? TimedoutPosts.toJSON(e) : undefined))
+    } else {
+      obj.TimedoutPosts = []
+    }
+    message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<QueryAllTimedoutPostsResponse>): QueryAllTimedoutPostsResponse {
+    const message = { ...baseQueryAllTimedoutPostsResponse } as QueryAllTimedoutPostsResponse
+    message.TimedoutPosts = []
+    if (object.TimedoutPosts !== undefined && object.TimedoutPosts !== null) {
+      for (const e of object.TimedoutPosts) {
+        message.TimedoutPosts.push(TimedoutPosts.fromPartial(e))
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination)
+    } else {
+      message.pagination = undefined
+    }
+    return message
+  }
 }
 
 const baseQueryGetSentPostRequest: object = { id: 0 }
@@ -532,6 +794,10 @@ export const QueryAllPostResponse = {
 
 /** Query defines the gRPC querier service. */
 export interface Query {
+  /** Queries a timedoutPosts by id. */
+  TimedoutPosts(request: QueryGetTimedoutPostsRequest): Promise<QueryGetTimedoutPostsResponse>
+  /** Queries a list of timedoutPosts items. */
+  TimedoutPostsAll(request: QueryAllTimedoutPostsRequest): Promise<QueryAllTimedoutPostsResponse>
   /** Queries a sentPost by id. */
   SentPost(request: QueryGetSentPostRequest): Promise<QueryGetSentPostResponse>
   /** Queries a list of sentPost items. */
@@ -547,6 +813,18 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
+  TimedoutPosts(request: QueryGetTimedoutPostsRequest): Promise<QueryGetTimedoutPostsResponse> {
+    const data = QueryGetTimedoutPostsRequest.encode(request).finish()
+    const promise = this.rpc.request('ahmetson.chain.ibcblog.Query', 'TimedoutPosts', data)
+    return promise.then((data) => QueryGetTimedoutPostsResponse.decode(new Reader(data)))
+  }
+
+  TimedoutPostsAll(request: QueryAllTimedoutPostsRequest): Promise<QueryAllTimedoutPostsResponse> {
+    const data = QueryAllTimedoutPostsRequest.encode(request).finish()
+    const promise = this.rpc.request('ahmetson.chain.ibcblog.Query', 'TimedoutPostsAll', data)
+    return promise.then((data) => QueryAllTimedoutPostsResponse.decode(new Reader(data)))
+  }
+
   SentPost(request: QueryGetSentPostRequest): Promise<QueryGetSentPostResponse> {
     const data = QueryGetSentPostRequest.encode(request).finish()
     const promise = this.rpc.request('ahmetson.chain.ibcblog.Query', 'SentPost', data)

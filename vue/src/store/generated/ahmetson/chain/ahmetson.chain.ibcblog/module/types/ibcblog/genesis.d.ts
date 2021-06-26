@@ -1,10 +1,15 @@
 import { Writer, Reader } from 'protobufjs/minimal';
+import { TimedoutPosts } from '../ibcblog/timedoutPosts';
 import { SentPost } from '../ibcblog/sentPost';
 import { Post } from '../ibcblog/post';
 export declare const protobufPackage = "ahmetson.chain.ibcblog";
 /** GenesisState defines the ibcblog module's genesis state. */
 export interface GenesisState {
     /** this line is used by starport scaffolding # genesis/proto/state */
+    timedoutPostsList: TimedoutPosts[];
+    /** this line is used by starport scaffolding # genesis/proto/stateField */
+    timedoutPostsCount: number;
+    /** this line is used by starport scaffolding # genesis/proto/stateField */
     sentPostList: SentPost[];
     /** this line is used by starport scaffolding # genesis/proto/stateField */
     sentPostCount: number;

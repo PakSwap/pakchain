@@ -9,6 +9,10 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgCreateTimedoutPosts{}, "ibcblog/CreateTimedoutPosts", nil)
+	cdc.RegisterConcrete(&MsgUpdateTimedoutPosts{}, "ibcblog/UpdateTimedoutPosts", nil)
+	cdc.RegisterConcrete(&MsgDeleteTimedoutPosts{}, "ibcblog/DeleteTimedoutPosts", nil)
+
 	cdc.RegisterConcrete(&MsgCreateSentPost{}, "ibcblog/CreateSentPost", nil)
 	cdc.RegisterConcrete(&MsgUpdateSentPost{}, "ibcblog/UpdateSentPost", nil)
 	cdc.RegisterConcrete(&MsgDeleteSentPost{}, "ibcblog/DeleteSentPost", nil)
@@ -21,6 +25,11 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreateTimedoutPosts{},
+		&MsgUpdateTimedoutPosts{},
+		&MsgDeleteTimedoutPosts{},
+	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateSentPost{},
 		&MsgUpdateSentPost{},

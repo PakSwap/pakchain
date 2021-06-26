@@ -1,12 +1,15 @@
 import { StdFee } from "@cosmjs/launchpad";
 import { OfflineSigner, EncodeObject } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgDeleteTimedoutPosts } from "./types/ibcblog/tx";
+import { MsgDeletePost } from "./types/ibcblog/tx";
+import { MsgUpdateSentPost } from "./types/ibcblog/tx";
+import { MsgCreateTimedoutPosts } from "./types/ibcblog/tx";
+import { MsgCreateSentPost } from "./types/ibcblog/tx";
 import { MsgCreatePost } from "./types/ibcblog/tx";
 import { MsgUpdatePost } from "./types/ibcblog/tx";
 import { MsgDeleteSentPost } from "./types/ibcblog/tx";
-import { MsgDeletePost } from "./types/ibcblog/tx";
-import { MsgCreateSentPost } from "./types/ibcblog/tx";
-import { MsgUpdateSentPost } from "./types/ibcblog/tx";
+import { MsgUpdateTimedoutPosts } from "./types/ibcblog/tx";
 export declare const MissingWalletError: Error;
 interface TxClientOptions {
     addr: string;
@@ -17,12 +20,15 @@ interface SignAndBroadcastOptions {
 }
 declare const txClient: (wallet: OfflineSigner, { addr: addr }?: TxClientOptions) => Promise<{
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }?: SignAndBroadcastOptions) => Promise<import("@cosmjs/stargate").BroadcastTxResponse>;
+    msgDeleteTimedoutPosts: (data: MsgDeleteTimedoutPosts) => EncodeObject;
+    msgDeletePost: (data: MsgDeletePost) => EncodeObject;
+    msgUpdateSentPost: (data: MsgUpdateSentPost) => EncodeObject;
+    msgCreateTimedoutPosts: (data: MsgCreateTimedoutPosts) => EncodeObject;
+    msgCreateSentPost: (data: MsgCreateSentPost) => EncodeObject;
     msgCreatePost: (data: MsgCreatePost) => EncodeObject;
     msgUpdatePost: (data: MsgUpdatePost) => EncodeObject;
     msgDeleteSentPost: (data: MsgDeleteSentPost) => EncodeObject;
-    msgDeletePost: (data: MsgDeletePost) => EncodeObject;
-    msgCreateSentPost: (data: MsgCreateSentPost) => EncodeObject;
-    msgUpdateSentPost: (data: MsgUpdateSentPost) => EncodeObject;
+    msgUpdateTimedoutPosts: (data: MsgUpdateTimedoutPosts) => EncodeObject;
 }>;
 interface QueryClientOptions {
     addr: string;

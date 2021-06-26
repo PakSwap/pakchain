@@ -4,21 +4,27 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgDeleteTimedoutPosts } from "./types/ibcblog/tx";
+import { MsgDeletePost } from "./types/ibcblog/tx";
+import { MsgUpdateSentPost } from "./types/ibcblog/tx";
+import { MsgCreateTimedoutPosts } from "./types/ibcblog/tx";
+import { MsgCreateSentPost } from "./types/ibcblog/tx";
 import { MsgCreatePost } from "./types/ibcblog/tx";
 import { MsgUpdatePost } from "./types/ibcblog/tx";
 import { MsgDeleteSentPost } from "./types/ibcblog/tx";
-import { MsgDeletePost } from "./types/ibcblog/tx";
-import { MsgCreateSentPost } from "./types/ibcblog/tx";
-import { MsgUpdateSentPost } from "./types/ibcblog/tx";
+import { MsgUpdateTimedoutPosts } from "./types/ibcblog/tx";
 
 
 const types = [
+  ["/ahmetson.chain.ibcblog.MsgDeleteTimedoutPosts", MsgDeleteTimedoutPosts],
+  ["/ahmetson.chain.ibcblog.MsgDeletePost", MsgDeletePost],
+  ["/ahmetson.chain.ibcblog.MsgUpdateSentPost", MsgUpdateSentPost],
+  ["/ahmetson.chain.ibcblog.MsgCreateTimedoutPosts", MsgCreateTimedoutPosts],
+  ["/ahmetson.chain.ibcblog.MsgCreateSentPost", MsgCreateSentPost],
   ["/ahmetson.chain.ibcblog.MsgCreatePost", MsgCreatePost],
   ["/ahmetson.chain.ibcblog.MsgUpdatePost", MsgUpdatePost],
   ["/ahmetson.chain.ibcblog.MsgDeleteSentPost", MsgDeleteSentPost],
-  ["/ahmetson.chain.ibcblog.MsgDeletePost", MsgDeletePost],
-  ["/ahmetson.chain.ibcblog.MsgCreateSentPost", MsgCreateSentPost],
-  ["/ahmetson.chain.ibcblog.MsgUpdateSentPost", MsgUpdateSentPost],
+  ["/ahmetson.chain.ibcblog.MsgUpdateTimedoutPosts", MsgUpdateTimedoutPosts],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,12 +53,15 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgDeleteTimedoutPosts: (data: MsgDeleteTimedoutPosts): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgDeleteTimedoutPosts", value: data }),
+    msgDeletePost: (data: MsgDeletePost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgDeletePost", value: data }),
+    msgUpdateSentPost: (data: MsgUpdateSentPost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgUpdateSentPost", value: data }),
+    msgCreateTimedoutPosts: (data: MsgCreateTimedoutPosts): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgCreateTimedoutPosts", value: data }),
+    msgCreateSentPost: (data: MsgCreateSentPost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgCreateSentPost", value: data }),
     msgCreatePost: (data: MsgCreatePost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgCreatePost", value: data }),
     msgUpdatePost: (data: MsgUpdatePost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgUpdatePost", value: data }),
     msgDeleteSentPost: (data: MsgDeleteSentPost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgDeleteSentPost", value: data }),
-    msgDeletePost: (data: MsgDeletePost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgDeletePost", value: data }),
-    msgCreateSentPost: (data: MsgCreateSentPost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgCreateSentPost", value: data }),
-    msgUpdateSentPost: (data: MsgUpdateSentPost): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgUpdateSentPost", value: data }),
+    msgUpdateTimedoutPosts: (data: MsgUpdateTimedoutPosts): EncodeObject => ({ typeUrl: "/ahmetson.chain.ibcblog.MsgUpdateTimedoutPosts", value: data }),
     
   };
 };

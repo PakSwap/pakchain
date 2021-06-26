@@ -6,10 +6,16 @@ export interface IbcblogMsgCreateSentPostResponse {
     /** @format uint64 */
     id?: string;
 }
+export interface IbcblogMsgCreateTimedoutPostsResponse {
+    /** @format uint64 */
+    id?: string;
+}
 export declare type IbcblogMsgDeletePostResponse = object;
 export declare type IbcblogMsgDeleteSentPostResponse = object;
+export declare type IbcblogMsgDeleteTimedoutPostsResponse = object;
 export declare type IbcblogMsgUpdatePostResponse = object;
 export declare type IbcblogMsgUpdateSentPostResponse = object;
+export declare type IbcblogMsgUpdateTimedoutPostsResponse = object;
 export interface IbcblogPost {
     creator?: string;
     /** @format uint64 */
@@ -43,17 +49,40 @@ export interface IbcblogQueryAllSentPostResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
+export interface IbcblogQueryAllTimedoutPostsResponse {
+    TimedoutPosts?: IbcblogTimedoutPosts[];
+    /**
+     * PageResponse is to be embedded in gRPC response messages where the
+     * corresponding request message has used PageRequest.
+     *
+     *  message SomeResponse {
+     *          repeated Bar results = 1;
+     *          PageResponse page = 2;
+     *  }
+     */
+    pagination?: V1Beta1PageResponse;
+}
 export interface IbcblogQueryGetPostResponse {
     Post?: IbcblogPost;
 }
 export interface IbcblogQueryGetSentPostResponse {
     SentPost?: IbcblogSentPost;
 }
+export interface IbcblogQueryGetTimedoutPostsResponse {
+    TimedoutPosts?: IbcblogTimedoutPosts;
+}
 export interface IbcblogSentPost {
     creator?: string;
     /** @format uint64 */
     id?: string;
     postid?: string;
+    title?: string;
+    chain?: string;
+}
+export interface IbcblogTimedoutPosts {
+    creator?: string;
+    /** @format uint64 */
+    id?: string;
     title?: string;
     chain?: string;
 }
@@ -222,5 +251,28 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request GET:/ahmetson/chain/ibcblog/sentPost/{id}
      */
     querySentPost: (id: string, params?: RequestParams) => Promise<HttpResponse<IbcblogQueryGetSentPostResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryTimedoutPostsAll
+     * @summary Queries a list of timedoutPosts items.
+     * @request GET:/ahmetson/chain/ibcblog/timedoutPosts
+     */
+    queryTimedoutPostsAll: (query?: {
+        "pagination.key"?: string;
+        "pagination.offset"?: string;
+        "pagination.limit"?: string;
+        "pagination.countTotal"?: boolean;
+    }, params?: RequestParams) => Promise<HttpResponse<IbcblogQueryAllTimedoutPostsResponse, RpcStatus>>;
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryTimedoutPosts
+     * @summary Queries a timedoutPosts by id.
+     * @request GET:/ahmetson/chain/ibcblog/timedoutPosts/{id}
+     */
+    queryTimedoutPosts: (id: string, params?: RequestParams) => Promise<HttpResponse<IbcblogQueryGetTimedoutPostsResponse, RpcStatus>>;
 }
 export {};

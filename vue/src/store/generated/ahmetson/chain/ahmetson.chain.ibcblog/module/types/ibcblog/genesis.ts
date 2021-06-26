@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Long from 'long'
 import { util, configure, Writer, Reader } from 'protobufjs/minimal'
+import { TimedoutPosts } from '../ibcblog/timedoutPosts'
 import { SentPost } from '../ibcblog/sentPost'
 import { Post } from '../ibcblog/post'
 
@@ -9,6 +10,10 @@ export const protobufPackage = 'ahmetson.chain.ibcblog'
 /** GenesisState defines the ibcblog module's genesis state. */
 export interface GenesisState {
   /** this line is used by starport scaffolding # genesis/proto/state */
+  timedoutPostsList: TimedoutPosts[]
+  /** this line is used by starport scaffolding # genesis/proto/stateField */
+  timedoutPostsCount: number
+  /** this line is used by starport scaffolding # genesis/proto/stateField */
   sentPostList: SentPost[]
   /** this line is used by starport scaffolding # genesis/proto/stateField */
   sentPostCount: number
@@ -20,10 +25,16 @@ export interface GenesisState {
   portId: string
 }
 
-const baseGenesisState: object = { sentPostCount: 0, postCount: 0, portId: '' }
+const baseGenesisState: object = { timedoutPostsCount: 0, sentPostCount: 0, postCount: 0, portId: '' }
 
 export const GenesisState = {
   encode(message: GenesisState, writer: Writer = Writer.create()): Writer {
+    for (const v of message.timedoutPostsList) {
+      TimedoutPosts.encode(v!, writer.uint32(50).fork()).ldelim()
+    }
+    if (message.timedoutPostsCount !== 0) {
+      writer.uint32(56).uint64(message.timedoutPostsCount)
+    }
     for (const v of message.sentPostList) {
       SentPost.encode(v!, writer.uint32(34).fork()).ldelim()
     }
@@ -46,11 +57,18 @@ export const GenesisState = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input
     let end = length === undefined ? reader.len : reader.pos + length
     const message = { ...baseGenesisState } as GenesisState
+    message.timedoutPostsList = []
     message.sentPostList = []
     message.postList = []
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
+        case 6:
+          message.timedoutPostsList.push(TimedoutPosts.decode(reader, reader.uint32()))
+          break
+        case 7:
+          message.timedoutPostsCount = longToNumber(reader.uint64() as Long)
+          break
         case 4:
           message.sentPostList.push(SentPost.decode(reader, reader.uint32()))
           break
@@ -76,8 +94,19 @@ export const GenesisState = {
 
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState
+    message.timedoutPostsList = []
     message.sentPostList = []
     message.postList = []
+    if (object.timedoutPostsList !== undefined && object.timedoutPostsList !== null) {
+      for (const e of object.timedoutPostsList) {
+        message.timedoutPostsList.push(TimedoutPosts.fromJSON(e))
+      }
+    }
+    if (object.timedoutPostsCount !== undefined && object.timedoutPostsCount !== null) {
+      message.timedoutPostsCount = Number(object.timedoutPostsCount)
+    } else {
+      message.timedoutPostsCount = 0
+    }
     if (object.sentPostList !== undefined && object.sentPostList !== null) {
       for (const e of object.sentPostList) {
         message.sentPostList.push(SentPost.fromJSON(e))
@@ -108,6 +137,12 @@ export const GenesisState = {
 
   toJSON(message: GenesisState): unknown {
     const obj: any = {}
+    if (message.timedoutPostsList) {
+      obj.timedoutPostsList = message.timedoutPostsList.map((e) => (e ? TimedoutPosts.toJSON(e) : undefined))
+    } else {
+      obj.timedoutPostsList = []
+    }
+    message.timedoutPostsCount !== undefined && (obj.timedoutPostsCount = message.timedoutPostsCount)
     if (message.sentPostList) {
       obj.sentPostList = message.sentPostList.map((e) => (e ? SentPost.toJSON(e) : undefined))
     } else {
@@ -126,8 +161,19 @@ export const GenesisState = {
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState
+    message.timedoutPostsList = []
     message.sentPostList = []
     message.postList = []
+    if (object.timedoutPostsList !== undefined && object.timedoutPostsList !== null) {
+      for (const e of object.timedoutPostsList) {
+        message.timedoutPostsList.push(TimedoutPosts.fromPartial(e))
+      }
+    }
+    if (object.timedoutPostsCount !== undefined && object.timedoutPostsCount !== null) {
+      message.timedoutPostsCount = object.timedoutPostsCount
+    } else {
+      message.timedoutPostsCount = 0
+    }
     if (object.sentPostList !== undefined && object.sentPostList !== null) {
       for (const e of object.sentPostList) {
         message.sentPostList.push(SentPost.fromPartial(e))

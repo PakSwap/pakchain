@@ -4,6 +4,7 @@ package ahmetson.chain.ibcblog;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "ibcblog/timedoutPosts.proto";
 import "ibcblog/sentPost.proto";
 import "ibcblog/post.proto";
 
@@ -12,6 +13,17 @@ option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a timedoutPosts by id.
+	rpc TimedoutPosts(QueryGetTimedoutPostsRequest) returns (QueryGetTimedoutPostsResponse) {
+		option (google.api.http).get = "/ahmetson/chain/ibcblog/timedoutPosts/{id}";
+	}
+
+	// Queries a list of timedoutPosts items.
+	rpc TimedoutPostsAll(QueryAllTimedoutPostsRequest) returns (QueryAllTimedoutPostsResponse) {
+		option (google.api.http).get = "/ahmetson/chain/ibcblog/timedoutPosts";
+	}
+
 
 	// Queries a sentPost by id.
 	rpc SentPost(QueryGetSentPostRequest) returns (QueryGetSentPostResponse) {
@@ -37,6 +49,22 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetTimedoutPostsRequest {
+	uint64 id = 1;
+}
+
+message QueryGetTimedoutPostsResponse {
+	TimedoutPosts TimedoutPosts = 1;
+}
+
+message QueryAllTimedoutPostsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllTimedoutPostsResponse {
+	repeated TimedoutPosts TimedoutPosts = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
 message QueryGetSentPostRequest {
 	uint64 id = 1;
 }

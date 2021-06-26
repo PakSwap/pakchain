@@ -10,6 +10,14 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
+	// Set all the timedoutPosts
+	for _, elem := range genState.TimedoutPostsList {
+		k.SetTimedoutPosts(ctx, *elem)
+	}
+
+	// Set timedoutPosts count
+	k.SetTimedoutPostsCount(ctx, genState.TimedoutPostsCount)
+
 	// Set all the sentPost
 	for _, elem := range genState.SentPostList {
 		k.SetSentPost(ctx, *elem)
@@ -44,6 +52,16 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	// this line is used by starport scaffolding # genesis/module/export
+	// Get all timedoutPosts
+	timedoutPostsList := k.GetAllTimedoutPosts(ctx)
+	for _, elem := range timedoutPostsList {
+		elem := elem
+		genesis.TimedoutPostsList = append(genesis.TimedoutPostsList, &elem)
+	}
+
+	// Set the current count
+	genesis.TimedoutPostsCount = k.GetTimedoutPostsCount(ctx)
+
 	// Get all sentPost
 	sentPostList := k.GetAllSentPost(ctx)
 	for _, elem := range sentPostList {

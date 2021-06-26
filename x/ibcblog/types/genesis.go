@@ -13,8 +13,9 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		PortId: PortID,
 		// this line is used by starport scaffolding # genesis/types/default
-		SentPostList: []*SentPost{},
-		PostList:     []*Post{},
+		TimedoutPostsList: []*TimedoutPosts{},
+		SentPostList:      []*SentPost{},
+		PostList:          []*Post{},
 	}
 }
 
@@ -26,6 +27,15 @@ func (gs GenesisState) Validate() error {
 	}
 
 	// this line is used by starport scaffolding # genesis/types/validate
+	// Check for duplicated ID in timedoutPosts
+	timedoutPostsIdMap := make(map[uint64]bool)
+
+	for _, elem := range gs.TimedoutPostsList {
+		if _, ok := timedoutPostsIdMap[elem.Id]; ok {
+			return fmt.Errorf("duplicated id for timedoutPosts")
+		}
+		timedoutPostsIdMap[elem.Id] = true
+	}
 	// Check for duplicated ID in sentPost
 	sentPostIdMap := make(map[uint64]bool)
 
