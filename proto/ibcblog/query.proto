@@ -4,12 +4,40 @@ package ahmetson.chain.ibcblog;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "ibcblog/post.proto";
 
 option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a post by id.
+	rpc Post(QueryGetPostRequest) returns (QueryGetPostResponse) {
+		option (google.api.http).get = "/ahmetson/chain/ibcblog/post/{id}";
+	}
+
+	// Queries a list of post items.
+	rpc PostAll(QueryAllPostRequest) returns (QueryAllPostResponse) {
+		option (google.api.http).get = "/ahmetson/chain/ibcblog/post";
+	}
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetPostRequest {
+	uint64 id = 1;
+}
+
+message QueryGetPostResponse {
+	Post Post = 1;
+}
+
+message QueryAllPostRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPostResponse {
+	repeated Post Post = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
