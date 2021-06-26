@@ -91,6 +91,9 @@ import (
 	"github.com/ahmetson/chain/x/chain"
 	chainkeeper "github.com/ahmetson/chain/x/chain/keeper"
 	chaintypes "github.com/ahmetson/chain/x/chain/types"
+	"github.com/ahmetson/chain/x/planet"
+	planetkeeper "github.com/ahmetson/chain/x/planet/keeper"
+	planettypes "github.com/ahmetson/chain/x/planet/types"
 )
 
 const Name = "chain"
@@ -137,6 +140,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
+		planet.AppModuleBasic{},
 		blog.AppModuleBasic{},
 		chain.AppModuleBasic{},
 	)
@@ -206,6 +210,8 @@ type App struct {
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
+	PlanetKeeper planetkeeper.Keeper
+
 	BlogKeeper blogkeeper.Keeper
 
 	ChainKeeper chainkeeper.Keeper
@@ -238,6 +244,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
+		planettypes.StoreKey,
 		blogtypes.StoreKey,
 		chaintypes.StoreKey,
 	)
@@ -332,6 +339,13 @@ func New(
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
+	app.PlanetKeeper = *planetkeeper.NewKeeper(
+		appCodec,
+		keys[planettypes.StoreKey],
+		keys[planettypes.MemStoreKey],
+	)
+	planetModule := planet.NewAppModule(appCodec, app.PlanetKeeper)
+
 	app.BlogKeeper = *blogkeeper.NewKeeper(
 		appCodec,
 		keys[blogtypes.StoreKey],
@@ -387,6 +401,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
+		planetModule,
 		blogModule,
 		chainModule,
 	)
@@ -422,6 +437,7 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
+		planettypes.ModuleName,
 		blogtypes.ModuleName,
 		chaintypes.ModuleName,
 	)
@@ -611,6 +627,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(planettypes.ModuleName)
 	paramsKeeper.Subspace(blogtypes.ModuleName)
 	paramsKeeper.Subspace(chaintypes.ModuleName)
 

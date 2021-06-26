@@ -54,7 +54,6 @@ func (k Keeper) GetPost(ctx sdk.Context, id uint64) types.Post {
 	return post
 }
 
-
 func (k Keeper) SetPostCount(ctx sdk.Context, count uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.PostCountKey))
 
