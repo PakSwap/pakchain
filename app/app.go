@@ -94,9 +94,6 @@ import (
 	"github.com/ahmetson/chain/x/ibcblog"
 	ibcblogkeeper "github.com/ahmetson/chain/x/ibcblog/keeper"
 	ibcblogtypes "github.com/ahmetson/chain/x/ibcblog/types"
-	"github.com/ahmetson/chain/x/planet"
-	planetkeeper "github.com/ahmetson/chain/x/planet/keeper"
-	planettypes "github.com/ahmetson/chain/x/planet/types"
 )
 
 const Name = "chain"
@@ -144,7 +141,6 @@ var (
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		ibcblog.AppModuleBasic{},
-		planet.AppModuleBasic{},
 		blog.AppModuleBasic{},
 		chain.AppModuleBasic{},
 	)
@@ -216,8 +212,6 @@ type App struct {
 	ScopedIbcblogKeeper capabilitykeeper.ScopedKeeper
 	IbcblogKeeper       ibcblogkeeper.Keeper
 
-	PlanetKeeper planetkeeper.Keeper
-
 	BlogKeeper blogkeeper.Keeper
 
 	ChainKeeper chainkeeper.Keeper
@@ -251,7 +245,6 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 		ibcblogtypes.StoreKey,
-		planettypes.StoreKey,
 		blogtypes.StoreKey,
 		chaintypes.StoreKey,
 	)
@@ -357,13 +350,6 @@ func New(
 	)
 	ibcblogModule := ibcblog.NewAppModule(appCodec, app.IbcblogKeeper)
 
-	app.PlanetKeeper = *planetkeeper.NewKeeper(
-		appCodec,
-		keys[planettypes.StoreKey],
-		keys[planettypes.MemStoreKey],
-	)
-	planetModule := planet.NewAppModule(appCodec, app.PlanetKeeper)
-
 	app.BlogKeeper = *blogkeeper.NewKeeper(
 		appCodec,
 		keys[blogtypes.StoreKey],
@@ -421,7 +407,6 @@ func New(
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 		ibcblogModule,
-		planetModule,
 		blogModule,
 		chainModule,
 	)
@@ -458,7 +443,6 @@ func New(
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		ibcblogtypes.ModuleName,
-		planettypes.ModuleName,
 		blogtypes.ModuleName,
 		chaintypes.ModuleName,
 	)
@@ -649,7 +633,6 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(ibcblogtypes.ModuleName)
-	paramsKeeper.Subspace(planettypes.ModuleName)
 	paramsKeeper.Subspace(blogtypes.ModuleName)
 	paramsKeeper.Subspace(chaintypes.ModuleName)
 
