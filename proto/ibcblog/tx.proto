@@ -11,6 +11,7 @@ option go_package = "github.com/ahmetson/chain/x/ibcblog/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc SendIbcPost(MsgSendIbcPost) returns (MsgSendIbcPostResponse);
   rpc CreateTimedoutPosts(MsgCreateTimedoutPosts) returns (MsgCreateTimedoutPostsResponse);
   rpc UpdateTimedoutPosts(MsgUpdateTimedoutPosts) returns (MsgUpdateTimedoutPostsResponse);
   rpc DeleteTimedoutPosts(MsgDeleteTimedoutPosts) returns (MsgDeleteTimedoutPostsResponse);
@@ -23,6 +24,18 @@ service Msg {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgSendIbcPost {
+  string sender = 1;
+  string port = 2;
+  string channelID = 3;
+  uint64 timeoutTimestamp = 4;
+  string title = 5;
+  string content = 6;
+}
+
+message MsgSendIbcPostResponse {
+}
+
 message MsgCreateTimedoutPosts {
   string creator = 1;
   string title = 2;

@@ -1,6 +1,16 @@
 import { Reader, Writer } from 'protobufjs/minimal';
 export declare const protobufPackage = "ahmetson.chain.ibcblog";
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgSendIbcPost {
+    sender: string;
+    port: string;
+    channelID: string;
+    timeoutTimestamp: number;
+    title: string;
+    content: string;
+}
+export interface MsgSendIbcPostResponse {
+}
 export interface MsgCreateTimedoutPosts {
     creator: string;
     title: string;
@@ -69,6 +79,20 @@ export interface MsgDeletePost {
 }
 export interface MsgDeletePostResponse {
 }
+export declare const MsgSendIbcPost: {
+    encode(message: MsgSendIbcPost, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgSendIbcPost;
+    fromJSON(object: any): MsgSendIbcPost;
+    toJSON(message: MsgSendIbcPost): unknown;
+    fromPartial(object: DeepPartial<MsgSendIbcPost>): MsgSendIbcPost;
+};
+export declare const MsgSendIbcPostResponse: {
+    encode(_: MsgSendIbcPostResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgSendIbcPostResponse;
+    fromJSON(_: any): MsgSendIbcPostResponse;
+    toJSON(_: MsgSendIbcPostResponse): unknown;
+    fromPartial(_: DeepPartial<MsgSendIbcPostResponse>): MsgSendIbcPostResponse;
+};
 export declare const MsgCreateTimedoutPosts: {
     encode(message: MsgCreateTimedoutPosts, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateTimedoutPosts;
@@ -198,6 +222,7 @@ export declare const MsgDeletePostResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
+    SendIbcPost(request: MsgSendIbcPost): Promise<MsgSendIbcPostResponse>;
     CreateTimedoutPosts(request: MsgCreateTimedoutPosts): Promise<MsgCreateTimedoutPostsResponse>;
     UpdateTimedoutPosts(request: MsgUpdateTimedoutPosts): Promise<MsgUpdateTimedoutPostsResponse>;
     DeleteTimedoutPosts(request: MsgDeleteTimedoutPosts): Promise<MsgDeleteTimedoutPostsResponse>;
@@ -211,6 +236,7 @@ export interface Msg {
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
+    SendIbcPost(request: MsgSendIbcPost): Promise<MsgSendIbcPostResponse>;
     CreateTimedoutPosts(request: MsgCreateTimedoutPosts): Promise<MsgCreateTimedoutPostsResponse>;
     UpdateTimedoutPosts(request: MsgUpdateTimedoutPosts): Promise<MsgUpdateTimedoutPostsResponse>;
     DeleteTimedoutPosts(request: MsgDeleteTimedoutPosts): Promise<MsgDeleteTimedoutPostsResponse>;

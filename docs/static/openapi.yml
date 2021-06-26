@@ -20394,6 +20394,8 @@ definitions:
     type: object
   ahmetson.chain.ibcblog.MsgDeleteTimedoutPostsResponse:
     type: object
+  ahmetson.chain.ibcblog.MsgSendIbcPostResponse:
+    type: object
   ahmetson.chain.ibcblog.MsgUpdatePostResponse:
     type: object
   ahmetson.chain.ibcblog.MsgUpdateSentPostResponse:
